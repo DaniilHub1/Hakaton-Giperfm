@@ -1,6 +1,8 @@
 import { dataProvider } from "@refinedev/supabase";
 import { supabaseClient } from "./providers/supabaseClient";
 import authProvider from "./providers/authProvider";
+import { liveProvider } from "@refinedev/supabase";
+import { useNotificationProvider } from "@refinedev/antd";
 
 import { EmployeeList } from "./pages/employees/list";
 import { ShowEmployee } from "./pages/employees/show";
@@ -25,9 +27,11 @@ export default function App() {
       <ConfigProvider>
         <AntdApp>
           <Refine
+          liveProvider={liveProvider(supabaseClient)}
             dataProvider={dataProvider(supabaseClient)}
             authProvider={authProvider}
             routerProvider={routerProvider}
+            notificationProvider={useNotificationProvider}
             resources={[
               {
                 name: "Employees",
@@ -39,9 +43,18 @@ export default function App() {
                 name: "products",
                 list: "/products",
                 show: "/products/:id",
-                meta: { label: "Мерч" }
+                meta: { label: "Продукты" },
+              },
+              {
+                name: "orders",
+                list: "/orders",
+                meta: { label: "Заказы" },
               },
             ]}
+            options={{ liveMode: "auto"}} 
+            onLiveEvent={(event) => {
+              console.log(event);
+            }}
           >
             <Routes>
               <Route
@@ -72,6 +85,10 @@ export default function App() {
                   <Route path="/products" element={<ProductsList />} />
                   <Route path="/products/:id" element={<ProductsList />} />
                 </Route>
+                <Route path="/orders">
+                  <Route index element={<ProductsList />} />
+                </Route>
+
               </Route>
               <Route
                 element={
