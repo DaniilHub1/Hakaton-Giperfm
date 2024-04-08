@@ -5,7 +5,11 @@ import { useGetIdentity } from "@refinedev/core";
 import { useCreate } from "@refinedev/core";
 
 export const ProductsList = () => {
-    const { listProps } = useSimpleList();
+    const { listProps } = useSimpleList({
+        pagination: {
+            pageSize: 20
+        }
+    });
     const { data: account } = useGetIdentity();
     const { mutate } = useCreate();
 
